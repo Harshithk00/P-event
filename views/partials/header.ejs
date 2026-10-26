@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> · CampusEvents</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="container nav">
+    <a class="brand" href="/">🎓 CampusEvents</a>
+    <nav>
+      <a href="/events" class="<%= path.startsWith('/events') ? 'active' : '' %>">Events</a>
+      <% if (currentUser) { %>
+        <a href="/dashboard" class="<%= path === '/dashboard' ? 'active' : '' %>">Dashboard</a>
+        <% if (currentUser.role !== 'student') { %><a href="/events/new">+ New event</a><% } %>
+        <% if (currentUser.role === 'admin') { %><a href="/admin" class="<%= path.startsWith('/admin') ? 'active' : '' %>">Admin</a><% } %>
+        <form method="post" action="/logout" class="inline">
+          <button class="link" type="submit">Log out (<%= currentUser.name %>)</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Log in</a>
+        <a href="/register" class="btn btn-sm">Sign up</a>
+      <% } %>
+    </nav>
+  </div>
+</header>
+<main class="container">
+  <% if (flash) { %><div class="flash flash-<%= flash.type %>"><%= flash.message %></div><% } %>

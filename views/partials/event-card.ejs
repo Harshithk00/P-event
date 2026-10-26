@@ -1,0 +1,7 @@
+<a class="card event-card" href="/events/<%= e.id %>">
+  <span class="badge badge-<%= e.category.toLowerCase() %>"><%= e.category %></span>
+  <h3><%= e.title %></h3>
+  <p class="muted">📅 <%= fmtDate(e.start_time) %></p>
+  <p class="muted">📍 <%= e.venue %></p>
+  <p class="seats"><%= e.registered %><%= e.capacity > 0 ? ' / ' + e.capacity : '' %> registered</p>
+</a>

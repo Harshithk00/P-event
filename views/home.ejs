@@ -1,0 +1,25 @@
+<%- include('partials/header') %>
+<section class="hero">
+  <h1>Everything happening on campus, in one place.</h1>
+  <p>Discover workshops, fests, hackathons and sports events — and register in one click.</p>
+  <div class="actions">
+    <a class="btn" href="/events">Browse events</a>
+    <% if (!currentUser) { %><a class="btn btn-outline" href="/register">Create an account</a><% } %>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stat"><strong><%= stats.events %></strong><span>Events</span></div>
+  <div class="stat"><strong><%= stats.students %></strong><span>Students</span></div>
+  <div class="stat"><strong><%= stats.registrations %></strong><span>Registrations</span></div>
+</section>
+
+<h2>Upcoming events</h2>
+<% if (!upcoming.length) { %>
+  <p class="muted">No upcoming events yet. Check back soon!</p>
+<% } else { %>
+  <div class="grid">
+    <% upcoming.forEach((e) => { %><%- include('partials/event-card', { e }) %><% }) %>
+  </div>
+<% } %>
+<%- include('partials/footer') %>

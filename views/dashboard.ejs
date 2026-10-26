@@ -1,0 +1,64 @@
+<%- include('partials/header') %>
+<h1>Hi, <%= currentUser.name %></h1>
+<p class="muted">Role: <strong><%= currentUser.role %></strong><%= currentUser.department ? ' · ' + currentUser.department : '' %><%= currentUser.roll_no ? ' · ' + currentUser.roll_no : '' %></p>
+
+<% if (currentUser.role !== 'student') { %>
+  <section class="card">
+    <div class="event-head">
+      <h2><%= currentUser.role === 'admin' ? 'All events' : 'Events you organize' %></h2>
+      <a class="btn" href="/events/new">+ New event</a>
+    </div>
+    <% if (!managed.length) { %>
+      <p class="muted">You haven't created any events yet.</p>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Event</th><th>Date</th><th>Status</th><th>Registered</th><th></th></tr></thead>
+          <tbody>
+            <% managed.forEach((e) => { %>
+              <tr>
+                <td><a href="/events/<%= e.id %>"><%= e.title %></a></td>
+                <td><%= fmtDate(e.start_time) %></td>
+                <td><span class="badge badge-status"><%= e.status %></span></td>
+                <td><%= e.registered %><%= e.capacity > 0 ? ' / ' + e.capacity : '' %></td>
+                <td class="nowrap"><a href="/events/<%= e.id %>/edit">Edit</a> · <a href="/events/<%= e.id %>/registrations">Attendees</a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+<% } %>
+
+<section class="card">
+  <h2>My registrations</h2>
+  <% if (!registrations.length) { %>
+    <p class="muted">You haven't registered for any events. <a href="/events">Browse events</a></p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Event</th><th>Date</th><th>Venue</th><th>Attendance</th><th></th></tr></thead>
+        <tbody>
+          <% registrations.forEach((e) => { %>
+            <tr>
+              <td><a href="/events/<%= e.id %>"><%= e.title %></a><% if (e.status === 'cancelled') { %> <span class="badge badge-status">cancelled</span><% } %></td>
+              <td><%= fmtDate(e.start_time) %></td>
+              <td><%= e.venue %></td>
+              <td><%= e.attended ? '✅ Attended' : (e.can_cancel ? 'Upcoming' : '—') %></td>
+              <td>
+                <% if (e.can_cancel) { %>
+                  <form method="post" action="/events/<%= e.id %>/cancel" class="inline">
+                    <input type="hidden" name="back" value="dashboard">
+                    <button class="link danger" type="submit">Cancel</button>
+                  </form>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</section>
+<%- include('partials/footer') %>

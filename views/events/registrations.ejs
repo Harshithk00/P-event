@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+<div class="card">
+  <div class="event-head">
+    <div>
+      <a href="/events/<%= event.id %>">← <%= event.title %></a>
+      <h1>Registrations (<%= attendees.length %><%= event.capacity > 0 ? ' / ' + event.capacity : '' %>)</h1>
+    </div>
+    <a class="btn btn-outline" href="/events/<%= event.id %>/registrations.csv">Download CSV</a>
+  </div>
+  <% if (!attendees.length) { %>
+    <p class="muted">No one has registered yet.</p>
+  <% } else { %>
+    <form method="post" action="/events/<%= event.id %>/attendance">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Present</th><th>Name</th><th>Email</th><th>Department</th><th>Roll No</th><th>Registered</th></tr></thead>
+          <tbody>
+            <% attendees.forEach((a) => { %>
+              <tr>
+                <td><input type="checkbox" name="present" value="<%= a.id %>" <%= a.attended ? 'checked' : '' %> aria-label="Mark <%= a.name %> present"></td>
+                <td><%= a.name %></td>
+                <td><%= a.email %></td>
+                <td><%= a.department || '—' %></td>
+                <td><%= a.roll_no || '—' %></td>
+                <td><%= a.created_at %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn" type="submit">Save attendance</button>
+    </form>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

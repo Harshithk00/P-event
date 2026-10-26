@@ -1,0 +1,22 @@
+<%- include('../partials/header') %>
+<div class="card narrow">
+  <h1>Student registration</h1>
+  <% if (errors.length) { %>
+    <div class="flash flash-error"><ul><% errors.forEach((e) => { %><li><%= e %></li><% }) %></ul></div>
+  <% } %>
+  <form method="post" action="/register" class="form">
+    <label>Full name <input name="name" value="<%= values.name || '' %>" required></label>
+    <label>College email <input type="email" name="email" value="<%= values.email || '' %>" required></label>
+    <div class="row">
+      <label>Department <input name="department" value="<%= values.department || '' %>"></label>
+      <label>Roll number <input name="roll_no" value="<%= values.roll_no || '' %>"></label>
+    </div>
+    <div class="row">
+      <label>Password <input type="password" name="password" minlength="6" required></label>
+      <label>Confirm password <input type="password" name="confirm_password" minlength="6" required></label>
+    </div>
+    <button class="btn" type="submit">Create account</button>
+  </form>
+  <p class="muted">Already registered? <a href="/login">Log in</a></p>
+</div>
+<%- include('../partials/footer') %>

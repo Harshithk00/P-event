@@ -1,0 +1,37 @@
+<%- include('../partials/header') %>
+<div class="card">
+  <h1><%= title %></h1>
+  <% if (errors.length) { %>
+    <div class="flash flash-error"><ul><% errors.forEach((e) => { %><li><%= e %></li><% }) %></ul></div>
+  <% } %>
+  <form method="post" action="<%= event ? '/events/' + event.id : '/events' %>" class="form">
+    <label>Title <input name="title" value="<%= values.title || '' %>" required></label>
+    <label>Description <textarea name="description" rows="5" required><%= values.description || '' %></textarea></label>
+    <div class="row">
+      <label>Category
+        <select name="category">
+          <% categories.forEach((c) => { %><option <%= values.category === c ? 'selected' : '' %>><%= c %></option><% }) %>
+        </select>
+      </label>
+      <label>Venue <input name="venue" value="<%= values.venue || '' %>" required></label>
+    </div>
+    <div class="row">
+      <label>Starts <input type="datetime-local" name="start_time" value="<%= values.start_time || '' %>" required></label>
+      <label>Ends <input type="datetime-local" name="end_time" value="<%= values.end_time || '' %>" required></label>
+    </div>
+    <div class="row">
+      <label>Registration deadline (optional) <input type="datetime-local" name="registration_deadline" value="<%= values.registration_deadline || '' %>"></label>
+      <label>Capacity (0 = unlimited) <input type="number" min="0" name="capacity" value="<%= values.capacity ?? 0 %>"></label>
+    </div>
+    <label>Status
+      <select name="status">
+        <% ['published', 'draft', 'cancelled'].forEach((s) => { %><option value="<%= s %>" <%= values.status === s ? 'selected' : '' %>><%= s %></option><% }) %>
+      </select>
+    </label>
+    <div class="actions">
+      <button class="btn" type="submit"><%= event ? 'Save changes' : 'Create event' %></button>
+      <a class="btn btn-outline" href="<%= event ? '/events/' + event.id : '/dashboard' %>">Cancel</a>
+    </div>
+  </form>
+</div>
+<%- include('../partials/footer') %>

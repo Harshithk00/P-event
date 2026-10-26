@@ -1,0 +1,23 @@
+<%- include('../partials/header') %>
+<h1>Events</h1>
+<form class="filters" method="get" action="/events">
+  <input type="search" name="q" placeholder="Search title, venue…" value="<%= filters.q %>">
+  <select name="category">
+    <option value="">All categories</option>
+    <% categories.forEach((c) => { %><option <%= filters.category === c ? 'selected' : '' %>><%= c %></option><% }) %>
+  </select>
+  <select name="when">
+    <option value="upcoming" <%= filters.when === 'upcoming' ? 'selected' : '' %>>Upcoming</option>
+    <option value="past" <%= filters.when === 'past' ? 'selected' : '' %>>Past</option>
+    <option value="all" <%= filters.when === 'all' ? 'selected' : '' %>>All</option>
+  </select>
+  <button class="btn" type="submit">Filter</button>
+</form>
+<% if (!events.length) { %>
+  <p class="muted">No events match your filters.</p>
+<% } else { %>
+  <div class="grid">
+    <% events.forEach((e) => { %><%- include('../partials/event-card', { e }) %><% }) %>
+  </div>
+<% } %>
+<%- include('../partials/footer') %>

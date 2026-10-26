@@ -1,0 +1,50 @@
+<%- include('../partials/header') %>
+<article class="card">
+  <div class="event-head">
+    <div>
+      <span class="badge badge-<%= event.category.toLowerCase() %>"><%= event.category %></span>
+      <% if (event.status !== 'published') { %><span class="badge badge-status"><%= event.status %></span><% } %>
+      <h1><%= event.title %></h1>
+    </div>
+    <% if (canManage) { %>
+      <div class="actions">
+        <a class="btn btn-outline" href="/events/<%= event.id %>/edit">Edit</a>
+        <a class="btn btn-outline" href="/events/<%= event.id %>/registrations">Registrations</a>
+        <form method="post" action="/events/<%= event.id %>/delete" class="inline" onsubmit="return confirm('Delete this event and all its registrations?')">
+          <button class="btn btn-danger" type="submit">Delete</button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+
+  <dl class="details">
+    <div><dt>Starts</dt><dd><%= fmtDate(event.start_time) %></dd></div>
+    <div><dt>Ends</dt><dd><%= fmtDate(event.end_time) %></dd></div>
+    <div><dt>Venue</dt><dd><%= event.venue %></dd></div>
+    <div><dt>Organizer</dt><dd><%= event.organizer_name %></dd></div>
+    <div><dt>Registration closes</dt><dd><%= event.registration_deadline ? fmtDate(event.registration_deadline) : 'At event start' %></dd></div>
+    <div><dt>Seats</dt><dd><%= event.registered %> registered<%= event.capacity > 0 ? ' of ' + event.capacity : ' (unlimited)' %></dd></div>
+  </dl>
+
+  <p class="description"><%= event.description %></p>
+
+  <div class="register-box">
+    <% if (registration) { %>
+      <p class="ok">✅ You are registered for this event<%= registration.attended ? ' — attendance marked' : '' %>.</p>
+      <% if (!blocker || blocker === 'This event is full.' || blocker === 'Registration has closed.') { %>
+        <form method="post" action="/events/<%= event.id %>/cancel">
+          <button class="btn btn-outline" type="submit">Cancel registration</button>
+        </form>
+      <% } %>
+    <% } else if (blocker) { %>
+      <p class="muted"><%= blocker %></p>
+    <% } else if (!currentUser) { %>
+      <a class="btn" href="/login?next=/events/<%= event.id %>">Log in to register</a>
+    <% } else { %>
+      <form method="post" action="/events/<%= event.id %>/register">
+        <button class="btn" type="submit">Register for this event</button>
+      </form>
+    <% } %>
+  </div>
+</article>
+<%- include('../partials/footer') %>
